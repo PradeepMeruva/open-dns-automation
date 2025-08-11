@@ -48,25 +48,7 @@ def block_games():
 
     page.wait_for_load_state("networkidle")
 
-         # Load domains to block from the JSON file
-    domains_to_block = load_block_list()
-
-     # Iterate through the list and block each domain
-    for domain in domains_to_block:
-        print(f"Trying to block  {domain} .")
-        page.fill("#block-domain", domain)  # Add domain to the block domain text box
-        page.click("#add-domain")  # Click the add domain button  
-        page.click("#confirm-add-already-blocked")
-         
-           
-        print(f"Blocked  {domain} .")
-    
-
-
-
-
-
-        # Check the checkbox with id #dt_category[12]
+    # Check the checkbox with id #dt_category[12]
     page.check("#dt_category\\[12\\]")  # Escape square brackets in the selector
     
     # Click the save button
@@ -75,6 +57,17 @@ def block_games():
   # Wait for the "apply" process to complete
     #page.wait_for_selector("#apply-status", state="hidden")  # Replace with the correct selector if needed
     page.wait_for_load_state("networkidle")
+
+             # Load domains to block from the JSON file
+    domains_to_block = load_block_list()
+
+     # Iterate through the list and block each domain
+    for domain in domains_to_block:
+        print(f"Trying to block  {domain} .")
+        page.fill("#block-domain", domain)  # Add domain to the block domain text box
+        page.click("#add-domain")  # Click the add domain button  
+        page.click("#confirm-add-already-blocked")
+        print(f"Blocked  {domain} .")
 
 
 
