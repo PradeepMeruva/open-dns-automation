@@ -46,6 +46,26 @@ def block_games():
     # Navigate to the content filtering page
     page.goto("https://dashboard.opendns.com/settings/644570811/content_filtering")
 
+    page.wait_for_load_state("networkidle")
+
+         # Load domains to block from the JSON file
+    domains_to_block = load_block_list()
+
+     # Iterate through the list and block each domain
+    for domain in domains_to_block:
+        print(f"Trying to block  {domain} .")
+        page.fill("#block-domain", domain)  # Add domain to the block domain text box
+        page.click("#add-domain")  # Click the add domain button  
+        page.click("#confirm-add-already-blocked")
+         
+           
+        print(f"Blocked  {domain} .")
+    
+
+
+
+
+
         # Check the checkbox with id #dt_category[12]
     page.check("#dt_category\\[12\\]")  # Escape square brackets in the selector
     
@@ -57,17 +77,7 @@ def block_games():
     page.wait_for_load_state("networkidle")
 
 
-     # Load domains to block from the JSON file
-    domains_to_block = load_block_list()
 
-     # Iterate through the list and block each domain
-    for domain in domains_to_block:
-        print(f"Trying to block  {domain} .")
-        page.fill("#block-domain", domain)  # Add domain to the block domain text box
-        page.click("#add-domain")  # Click the add domain button      
-        print(f"Blocked  {domain} .")
-    
-        page.wait_for_load_state("networkidle")
 
     
 
