@@ -81,12 +81,12 @@ The script accepts a parameter to specify the action (`block` or `unblock`).
 
 #### Block Domains:
 ```bash
-python app.py block
+python3 app.py block
 ```
 
 #### Unblock Domains:
 ```bash
-python app.py unblock
+python3 app.py unblock
 ```
 
 ---
