@@ -1,0 +1,7 @@
+{
+    "domains_to_block": [
+        "test1.com",
+        "test2.com",
+        "test3.com"
+    ]
+}

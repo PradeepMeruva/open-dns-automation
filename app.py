@@ -14,12 +14,16 @@ def load_config():
     decrypted = fernet.decrypt(encrypted)
     return json.loads(decrypted)
 
+
+def load_block_list():
+    with open("block_list.json", "r") as file:
+        data = json.load(file)
+    return data["domains_to_block"]
+
 def block_games():
     config = load_config()
     username = config["username"]
     password = config["password"]
-
-
 
 
     playwright = sync_playwright().start()  # Start Playwright
@@ -51,24 +55,24 @@ def block_games():
   # Wait for the "apply" process to complete
     #page.wait_for_selector("#apply-status", state="hidden")  # Replace with the correct selector if needed
     page.wait_for_load_state("networkidle")
-    
-    # Add "discord.com" to the block domain text box
-    page.fill("#block-domain", "discord.com")
-    
-    # Click the add domain button
-    page.click("#add-domain")
 
-     # Click the confirm button if the domain is already blocked
-    page.click("#confirm-add-already-blocked")
 
-     # Add "padlet.com" to the block domain text box
-    page.fill("#block-domain", "padlet.com")
+     # Load domains to block from the JSON file
+    domains_to_block = load_block_list()
+
+     # Iterate through the list and block each domain
+    for domain in domains_to_block:
+        print(f"Trying to block  {domain} .")
+        page.fill("#block-domain", domain)  # Add domain to the block domain text box
+        page.click("#add-domain")  # Click the add domain button      
+        print(f"Blocked  {domain} .")
     
-    # Click the add domain button
-    page.click("#add-domain")
+        page.wait_for_load_state("networkidle")
+
     
-    # Click the confirm button if the domain is already blocked
-    page.click("#confirm-add-already-blocked")
+
+
+
     
 
     print("Browser is open. Press Ctrl+C to exit.")
@@ -81,6 +85,19 @@ def block_games():
     finally:
         browser.close()
         playwright.stop()
+
+
+def check_all_blocked_domains(page):
+    # Select all checkboxes with the class "domains-list blocked-domain"
+    checkboxes = page.locator("input.domains-list.blocked-domain")
+    
+    # Get the count of checkboxes
+    count = checkboxes.count()
+    
+    # Iterate through each checkbox and check it
+    for i in range(count):
+        checkboxes.nth(i).check()
+    print(f"Checked {count} blocked domains.")
 
 
 def unblock_games():
@@ -120,13 +137,11 @@ def unblock_games():
 
     page.wait_for_load_state("networkidle")
     
- # Navigate to the content filtering page
+ 
     
-    
+ 
 
-     # Check specific checkboxes by ID
-    page.check("#\\34 827453")  # Escape numeric ID for checkbox with ID 4827453
-    page.check("#\\31 039709")  
+    check_all_blocked_domains(page)
     
     # Click the delete button
     page.click("#delete-domains")
